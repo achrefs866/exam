@@ -1,0 +1,15 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: email
+
+receivers:
+  - name: email
+    email_configs:
+      - to: "achrefs866@gmail.com"
+        from: "achrefs866@gmail.com"
+        smarthost: "smtp.gmail.com:587"
+        auth_username: "achrefs866@gmail.com"
+        auth_password: "xtrslbozxtipyfzb"   # Gmail App Password
+        require_tls: true

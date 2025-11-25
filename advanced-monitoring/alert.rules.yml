@@ -1,0 +1,11 @@
+groups:
+  - name: test_alert
+    rules:
+      - alert: TestEmail
+        expr: vector(2) > 1
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "This is a test email alert from Prometheus"
+          description: "Flask request duration exceeded 1 second. Alertmanager is working."
