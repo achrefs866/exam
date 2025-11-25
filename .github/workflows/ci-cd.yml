@@ -31,7 +31,3 @@ jobs:
           chmod +x ./advanced-monitoring/test_app.sh
           ./advanced-monitoring/test_app.sh
 
-      # 5️⃣ Arrêter le conteneur Flask
-      - name: Stop test container
-        if: always()
-        run: docker rm -f flask-test || true
