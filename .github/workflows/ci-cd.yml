@@ -8,45 +8,30 @@ on:
 jobs:
   build-and-test:
     name: Build image & Test Flask
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # toujours nécessaire pour GitHub Actions, même si Docker local
 
     steps:
-      # 1️⃣ Checkout du code
+      # 1️⃣ Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Installer Docker et docker-compose via dépôt officiel
-      - name: Install Docker + docker-compose
-        run: |
-          sudo apt-get update
-          sudo apt-get remove -y docker docker-engine docker.io containerd runc containerd.io || true
-          sudo apt-get install -y ca-certificates curl gnupg lsb-release
-          sudo mkdir -p /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-          docker --version
-          docker-compose version
-          docker info
-
-      # 3️⃣ Build de l’image Flask
+      # 2️⃣ Build de l’image Flask
       - name: Build Flask image
         run: docker build -t flask-monitoring-app .
 
-      # 4️⃣ Lancer le conteneur Flask pour les tests
+      # 3️⃣ Lancer le conteneur Flask pour les tests
       - name: Run Flask container for testing
         run: |
           docker run -d --name flask-test -p 5000:5000 flask-monitoring-app
           sleep 8
 
-      # 5️⃣ Exécuter le script de test
+      # 4️⃣ Exécuter le script de test
       - name: Run test script
         run: |
           chmod +x ./advanced-monitoring/test_app.sh
           ./advanced-monitoring/test_app.sh
 
-      # 6️⃣ Arrêter le conteneur Flask
+      # 5️⃣ Arrêter le conteneur Flask
       - name: Stop test container
         if: always()
         run: docker rm -f flask-test || true
